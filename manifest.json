@@ -1,7 +1,7 @@
 {
 	"id": "reading-pace",
 	"name": "Reading Pace",
-	"version": "1.0.3",
+	"version": "1.0.4-beta.1",
 	"minAppVersion": "1.13.0",
 	"description": "Shows how long the current note or selection takes to read, using your own words per minute and a separate pace for Chinese and Japanese text.",
 	"author": "Michael Lip",
