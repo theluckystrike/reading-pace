@@ -1,0 +1,4 @@
+/* Reading Pace. Hide the status bar item when no Markdown note is open. */
+.reading-pace-hidden {
+	display: none;
+}

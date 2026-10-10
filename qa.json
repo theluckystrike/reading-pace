@@ -1,0 +1,56 @@
+[
+	{
+		"feature": "status-bar",
+		"caption": "The status bar shows the reading time of the open note.",
+		"note": "Notes on slow reading.md",
+		"eval": "const e = app.workspace.activeEditor.editor; e.setCursor({ line: 0, ch: 0 }); e.scrollTo(0, 0); 'ok'",
+		"commands": []
+	},
+	{
+		"feature": "selection",
+		"caption": "With text selected, the status bar times only the selection.",
+		"note": "Notes on slow reading.md",
+		"eval": "const e = app.workspace.activeEditor.editor; let i = 0; while (i < e.lineCount() && !e.getLine(i).startsWith('Once I had')) i++; e.focus(); e.setSelection({ line: i, ch: 0 }, { line: i + 3, ch: 0 }); e.scrollIntoView({ from: { line: i - 3, ch: 0 }, to: { line: i + 6, ch: 0 } }, true); 'ok'",
+		"commands": []
+	},
+	{
+		"feature": "show-reading-time",
+		"caption": "The Show reading time command prints the word count and the pace in a notice.",
+		"note": "Notes on slow reading.md",
+		"eval": "const e = app.workspace.activeEditor.editor; e.setCursor({ line: 0, ch: 0 }); e.scrollTo(0, 0); 'ok'",
+		"commands": ["reading-pace:show-reading-time"]
+	},
+	{
+		"feature": "cjk-pace",
+		"caption": "Japanese text is counted per character at its own pace and added to the English words.",
+		"note": "Kyoto day trip.md",
+		"eval": "const e = app.workspace.activeEditor.editor; e.setCursor({ line: 0, ch: 0 }); e.scrollTo(0, 0); 'ok'",
+		"commands": ["reading-pace:show-reading-time"]
+	},
+	{
+		"feature": "save-property",
+		"caption": "Save reading time to note properties writes the minutes into the reading_time property.",
+		"note": "Notes on slow reading.md",
+		"eval": "const e = app.workspace.activeEditor.editor; e.setCursor({ line: 0, ch: 0 }); e.scrollTo(0, 0); 'ok'",
+		"commands": ["reading-pace:save-reading-time-property"],
+		"wait": 1200
+	},
+	{
+		"feature": "settings",
+		"caption": "Settings for the words per minute, the CJK pace, code blocks, the status bar and the property name.",
+		"eval": "app.setting.open(); app.setting.openTabById('reading-pace'); 'ok'",
+		"after": "app.setting.close(); 'ok'",
+		"commands": []
+	},
+	{
+		"feature": "reading-pace",
+		"caption": "Open a note, select a passage, then run Show reading time.",
+		"frames": [
+			{ "note": "Notes on slow reading.md", "eval": "const e = app.workspace.activeEditor.editor; e.setCursor({ line: 0, ch: 0 }); e.scrollTo(0, 0); 'ok'", "hold": 1800 },
+			{ "eval": "const e = app.workspace.activeEditor.editor; let i = 0; while (i < e.lineCount() && !e.getLine(i).startsWith('I started timing')) i++; e.focus(); e.setSelection({ line: i, ch: 0 }, { line: i + 1, ch: 0 }); 'ok'", "hold": 1600 },
+			{ "eval": "const e = app.workspace.activeEditor.editor; let i = 0; while (i < e.lineCount() && !e.getLine(i).startsWith('I started timing')) i++; e.setSelection({ line: i, ch: 0 }, { line: i + 15, ch: 0 }); 'ok'", "hold": 1600 },
+			{ "eval": "const e = app.workspace.activeEditor.editor; e.setCursor({ line: 0, ch: 0 }); 'ok'", "hold": 1400 },
+			{ "commands": ["reading-pace:show-reading-time"], "hold": 2400 }
+		]
+	}
+]

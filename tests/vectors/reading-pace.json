@@ -1,0 +1,198 @@
+{
+ "slug": "reading-pace",
+ "module": "src/core",
+ "function": "readingTime",
+ "note": "args = [markdown, options]; expected = ReadingResult. Seconds round up; minutes = ceil(seconds/60).",
+ "cases": [
+  {
+   "name": "empty note",
+   "args": [
+    "",
+    {}
+   ],
+   "expected": {
+    "words": 0,
+    "cjkChars": 0,
+    "seconds": 0,
+    "minutes": 0,
+    "label": "0 min read"
+   }
+  },
+  {
+   "name": "400 words at the default 200 wpm",
+   "args": [
+    "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+    {}
+   ],
+   "expected": {
+    "words": 400,
+    "cjkChars": 0,
+    "seconds": 120,
+    "minutes": 2,
+    "label": "2 min read"
+   }
+  },
+  {
+   "name": "450 words at 300 wpm",
+   "args": [
+    "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+    {
+     "wordsPerMinute": 300
+    }
+   ],
+   "expected": {
+    "words": 450,
+    "cjkChars": 0,
+    "seconds": 90,
+    "minutes": 2,
+    "label": "2 min read"
+   }
+  },
+  {
+   "name": "frontmatter and fenced code are skipped",
+   "args": [
+    "---\ntitle: Long title words here\ntags: [a, b]\n---\n# Heading one\nSome body text.\n```js\nconst x = 1;\n```\n",
+    {}
+   ],
+   "expected": {
+    "words": 5,
+    "cjkChars": 0,
+    "seconds": 2,
+    "minutes": 1,
+    "label": "Under 1 min read"
+   }
+  },
+  {
+   "name": "fenced code counts when includeCode is on",
+   "args": [
+    "---\ntitle: Long title words here\ntags: [a, b]\n---\n# Heading one\nSome body text.\n```js\nconst x = 1;\n```\n",
+    {
+     "includeCode": true
+    }
+   ],
+   "expected": {
+    "words": 8,
+    "cjkChars": 0,
+    "seconds": 3,
+    "minutes": 1,
+    "label": "Under 1 min read"
+   }
+  },
+  {
+   "name": "links count only their visible text",
+   "args": [
+    "Read [the docs](https://example.com/a/b) and [[Project Plan|the plan]] or [[Inbox]]. See https://example.com/x ![img](a.png) ![[pic.png]]",
+    {}
+   ],
+   "expected": {
+    "words": 9,
+    "cjkChars": 0,
+    "seconds": 3,
+    "minutes": 1,
+    "label": "Under 1 min read"
+   }
+  },
+  {
+   "name": "Chinese and Japanese count per character",
+   "args": [
+    "hello world 日本語のテキスト",
+    {}
+   ],
+   "expected": {
+    "words": 2,
+    "cjkChars": 8,
+    "seconds": 2,
+    "minutes": 1,
+    "label": "Under 1 min read"
+   }
+  },
+  {
+   "name": "long reads switch to hours",
+   "args": [
+    "a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a",
+    {
+     "wordsPerMinute": 20
+    }
+   ],
+   "expected": {
+    "words": 1300,
+    "cjkChars": 0,
+    "seconds": 3900,
+    "minutes": 65,
+    "label": "1 h 5 min read"
+   }
+  },
+  {
+   "name": "Obsidian and HTML comments are ignored",
+   "args": [
+    "Visible text %%hidden note%% here <!-- html comment --> end",
+    {}
+   ],
+   "expected": {
+    "words": 4,
+    "cjkChars": 0,
+    "seconds": 2,
+    "minutes": 1,
+    "label": "Under 1 min read"
+   }
+  },
+  {
+   "name": "ordered list numbers are not words",
+   "args": [
+    "1. first\n2. second\n- third",
+    {}
+   ],
+   "expected": {
+    "words": 3,
+    "cjkChars": 0,
+    "seconds": 1,
+    "minutes": 1,
+    "label": "Under 1 min read"
+   }
+  },
+  {
+   "name": "contractions and hyphenated words count once",
+   "args": [
+    "don't re-run state-of-the-art",
+    {}
+   ],
+   "expected": {
+    "words": 3,
+    "cjkChars": 0,
+    "seconds": 1,
+    "minutes": 1,
+    "label": "Under 1 min read"
+   }
+  },
+  {
+   "name": "zero wpm falls back to 200",
+   "args": [
+    "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+    {
+     "wordsPerMinute": 0
+    }
+   ],
+   "expected": {
+    "words": 200,
+    "cjkChars": 0,
+    "seconds": 60,
+    "minutes": 1,
+    "label": "1 min read"
+   }
+  },
+  {
+   "name": "an unclosed frontmatter block is read as text",
+   "args": [
+    "---\nunclosed: frontmatter\nwords words",
+    {}
+   ],
+   "expected": {
+    "words": 4,
+    "cjkChars": 0,
+    "seconds": 2,
+    "minutes": 1,
+    "label": "Under 1 min read"
+   }
+  }
+ ]
+}
