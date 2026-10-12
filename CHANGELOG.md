@@ -1,5 +1,11 @@
 # reading-pace
 
+## 1.0.4
+
+### Patch Changes
+
+- 117a18c: Require Obsidian 1.13.4, the first public 1.13 release. Versions 1.13.0 to 1.13.3 were Insiders-only builds.
+
 ## 1.0.3
 
 ### Patch Changes

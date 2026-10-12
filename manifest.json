@@ -1,8 +1,8 @@
 {
 	"id": "reading-pace",
 	"name": "Reading Pace",
-	"version": "1.0.3",
-	"minAppVersion": "1.13.0",
+	"version": "1.0.4",
+	"minAppVersion": "1.13.4",
 	"description": "Shows how long the current note or selection takes to read, using your own words per minute and a separate pace for Chinese and Japanese text.",
 	"author": "Michael Lip",
 	"authorUrl": "https://github.com/theluckystrike",

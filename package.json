@@ -1,6 +1,6 @@
 {
 	"name": "reading-pace",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"private": true,
 	"description": "Shows how long the current note or selection takes to read, using your own words per minute and a separate pace for Chinese and Japanese text.",
 	"main": "main.js",

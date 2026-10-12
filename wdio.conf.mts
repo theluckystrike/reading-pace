@@ -1,8 +1,9 @@
 // End-to-end smoke test in a real Obsidian (wdio-obsidian-service). Run: npm run build && npm run test:e2e
 // OBSIDIAN_VERSIONS is a space separated list of app/installer pairs. CI runs "earliest/earliest" and
-// "latest/latest" on ubuntu-latest under Xvfb. "earliest" here means the first PUBLIC release at or above
-// minAppVersion: Obsidian ships most x.y.0 builds to Insiders only, and those need an account to download.
-// Set OBSIDIAN_EMAIL and OBSIDIAN_PASSWORD (an Insiders account) and OBSIDIAN_ALLOW_BETA=1 to test the exact minAppVersion.
+// "latest/latest" on ubuntu-latest under Xvfb. "earliest" is exactly manifest minAppVersion: fx check
+// (tools/min-app-version.mjs) requires it to be the first PUBLIC release at or above the API floor, because
+// Obsidian ships most x.y.0 to x.y.3 builds to Insiders only and those need an account to download.
+// Set OBSIDIAN_EMAIL and OBSIDIAN_PASSWORD (an Insiders account) and OBSIDIAN_ALLOW_BETA=1 to test an Insiders floor.
 import { readFileSync } from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
@@ -11,23 +12,13 @@ import ObsidianLauncher from 'obsidian-launcher';
 const cacheDir = process.env.OBSIDIAN_CACHE ?? path.join(os.homedir(), '.cache', 'obsidian-launcher');
 const { minAppVersion } = JSON.parse(readFileSync('manifest.json', 'utf8')) as { minAppVersion: string };
 
-const parts = (v: string) => v.split(/[.-]/).slice(0, 3).map(Number);
-const cmp = (a: string, b: string) => {
-	const [x, y] = [parts(a), parts(b)];
-	for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return (x[i] ?? 0) - (y[i] ?? 0);
-	return 0;
-};
-
-/** First public (non-Insiders) Obsidian release that is at least minAppVersion. */
+/** minAppVersion itself, after checking that it is a public (non-Insiders) desktop release. */
 async function earliestPublic(): Promise<string> {
 	if (process.env.OBSIDIAN_ALLOW_BETA === '1') return 'earliest';
 	const versions = await new ObsidianLauncher({ cacheDir }).getVersions();
-	const ok = versions
-		.filter((v) => !v.isBeta && !!v.downloads?.asar && cmp(v.version, minAppVersion) >= 0)
-		.sort((a, b) => cmp(a.version, b.version));
-	if (!ok[0]) throw new Error(`no public Obsidian release at or above minAppVersion ${minAppVersion}`);
-	if (ok[0].version !== minAppVersion) console.log(`wdio: minAppVersion ${minAppVersion} is Insiders-only, testing ${ok[0].version}`);
-	return ok[0].version;
+	const v = versions.find((x) => x.version === minAppVersion);
+	if (!v || v.isBeta || !v.downloads?.asar) throw new Error(`minAppVersion ${minAppVersion} is not a public Obsidian desktop release; fx check requires one (tools/data/obsidian-public-releases.json)`);
+	return minAppVersion;
 }
 
 const pairs = (process.env.OBSIDIAN_VERSIONS ?? 'earliest/earliest latest/latest')

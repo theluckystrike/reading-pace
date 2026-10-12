@@ -55,7 +55,7 @@ When Reading Pace is listed in the community directory, open Settings, then Comm
 
 To install by hand, download `main.js`, `manifest.json` and `styles.css` from the latest release. Put the three files in `<vault>/.obsidian/plugins/reading-pace/`. Restart Obsidian or reload the list of community plugins, then turn on Reading Pace.
 
-Reading Pace needs Obsidian 1.13.0 or newer. It works on desktop and on mobile, except for the status bar, which Obsidian shows only on desktop.
+Reading Pace needs Obsidian 1.13.4 or newer. It works on desktop and on mobile, except for the status bar, which Obsidian shows only on desktop.
 
 ## Usage
 
